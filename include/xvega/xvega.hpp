@@ -8,12 +8,7 @@
 #define XVEGA_HPP
 
 #include "nlohmann/json.hpp"
-#include "functions/populate_data.hpp"
-#include "functions/populate_marks.hpp"
-#include "functions/populate_encodings.hpp"
-#include "functions/populate_selections.hpp"
-#include "functions/populate_transformations.hpp"
-#include "functions/populate_config.hpp"
+#include "base/xvega-base.hpp"
 #include "grammar/view_compositions/layering.hpp"
 #include "grammar/view_compositions/hconcat.hpp"
 #include "grammar/view_compositions/vconcat.hpp"
@@ -26,20 +21,8 @@ namespace xv
 {   
     inline nl::json mime_bundle_repr(const Chart& v)
     {
-        auto json_template = base_vegalite_json();
-        populate_data(json_template, v);
-
-        serialize(json_template, v.width(), "width");
-        serialize(json_template, v.height(), "height");
-        
-        populate_marks(json_template, v);
-        populate_encodings(json_template, v);
-        populate_selections(json_template, v);
-        populate_transformations(json_template, v);
-        populate_config(json_template, v);
-
         auto bundle = nl::json::object();
-        bundle["application/vnd.vegalite.v3+json"] = json_template;
+        bundle["application/vnd.vegalite.v3+json"] = v;
         return bundle;
     }
 }

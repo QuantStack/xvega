@@ -8,16 +8,5 @@
 
 namespace xv
 {
-    mark_point::mark_point()
-    {
-        type = "point";
-    }
-
-    void mark_point::to_json(nl::json& j) const
-    {
-        base_type::to_json(j);
-        // Fill in Point Mark Properties
-        serialize(j, shape(), "shape");
-        serialize(j, size(), "size");
-    }
+    template class XVEGA_API xmaterialize<point>;
 }

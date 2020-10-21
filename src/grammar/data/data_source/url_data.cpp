@@ -8,10 +8,5 @@
 
 namespace xv
 {
-    void to_json(nl::json& j, const url_data& data)
-    {
-        serialize(j, data.url(), "url");
-        serialize(j, data.name(), "name");
-        serialize(j, data.format(), "format");
-    }
+    template class XVEGA_API xmaterialize<URL_data>;
 }

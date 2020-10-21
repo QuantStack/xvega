@@ -24,7 +24,8 @@ namespace xv
 
     inline nl::json mime_bundle_repr(const layer& v)
     {
-        auto j = base_vegalite_json();
+        auto j = nl::json::object();
+        j["$schema"] = "https://vega.github.io/schema/vega-lite/v4.json";
         int len_charts = v.charts().size();
         
         for(int i=0; i<len_charts; i++)

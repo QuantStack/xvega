@@ -8,23 +8,41 @@
 #define XVEGA_MARK_LINE_HPP
 
 #include "../marks.hpp"
+#include "../../utils/xmaterialize.hpp"
 
 namespace xv
 {
-    struct mark_line : public mark<mark_line>
+    template <class D>
+    struct line : public mark<D>
     {
-        using base_type = mark<mark_line>;
+        using base_type = mark<D>;
 
-        // Line Mark Properties
-        XPROPERTY(xtl::xoptional<std::string>, mark_line, orient);
-        XPROPERTY(xtl::xoptional<std::string>, mark_line, interpolate);
-        XPROPERTY(xtl::xoptional<double>, mark_line, tension);
-        XPROPERTY(xtl::xoptional<bool_string_object_type>, mark_line, point);
+        XPROPERTY(xtl::xoptional<std::string>, D, orient);
+        XPROPERTY(xtl::xoptional<std::string>, D, interpolate);
+        XPROPERTY(xtl::xoptional<double>, D, tension);
+        XPROPERTY(xtl::xoptional<bool_string_object_type>, D, point);
 
-        XVEGA_API mark_line();
+        inline line()
+        {
+            this->type = "line";
+        }
 
-        XVEGA_API void to_json(nl::json& j) const;
+        inline void to_json(nl::json& j) const
+        {
+            base_type::to_json(j);
+
+            serialize(j, orient(), "orient");
+            serialize(j, interpolate(), "interpolate");
+            serialize(j, tension(), "tension");
+            serialize(j, point(), "point");
+        }
     };
+
+    using mark_line = xmaterialize<line>;
+
+#ifndef MSC_VER
+    extern template class xmaterialize<line>;
+#endif
 }
 
 #endif

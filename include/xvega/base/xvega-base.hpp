@@ -62,6 +62,8 @@
 #include "../grammar/transformations/transform_timeunit.hpp"
 #include "../grammar/transformations/transform_window.hpp"
 
+#include "../utils/xmaterialize.hpp"
+
 namespace nl = nlohmann;
 
 namespace xv
@@ -123,19 +125,52 @@ namespace xv
                                 transform_window
                                 >;
 
-    XVEGA_API const nl::json& base_vegalite_json();
-
-    struct Chart : public xp::xobserved<Chart>
+    template <class D>
+    struct chart : public xp::xobserved<D>
     {
-        XPROPERTY(data_type, Chart, data);
-        XPROPERTY(marks_type, Chart, mark);
-        XPROPERTY(xtl::xoptional<Encodings>, Chart, encoding);
-        XPROPERTY(std::vector<selection_type>, Chart, selections);
-        XPROPERTY(std::vector<transform_type>, Chart, transformations);
-        XPROPERTY(xtl::xoptional<double>, Chart, width);
-        XPROPERTY(xtl::xoptional<double>, Chart, height);
-        XPROPERTY(xtl::xoptional<Config>, Chart, config);
+        XPROPERTY(data_type, D, data);
+        XPROPERTY(marks_type, D, mark);
+        XPROPERTY(xtl::xoptional<Encodings>, D, encoding);
+        XPROPERTY(std::vector<selection_type>, D, selections);
+        XPROPERTY(std::vector<transform_type>, D, transformations);
+        XPROPERTY(xtl::xoptional<double>, D, width);
+        XPROPERTY(xtl::xoptional<double>, D, height);
+        XPROPERTY(xtl::xoptional<Config>, D, config);
     };
+
+    using Chart = xmaterialize<chart>;
+
+    inline void to_json(nl::json& j, const Chart& data)
+    {
+        j["$schema"] = "https://vega.github.io/schema/vega-lite/v4.json";
+        j["data"] = data.data();
+        j["mark"] = data.mark();
+        serialize(j, data.encoding(), "encoding");
+
+        int len_selections = data.selections().size();
+        for(int i=0; i<len_selections; i++)
+        {
+            xtl::visit([&](auto&& arg){
+                    j["selection"][arg.name().value()]=arg;
+                }, data.selections()[i]);
+        }
+
+        int len_transformations = data.transformations().size();
+        for(int i=0; i<len_transformations; i++)
+        {
+            xtl::visit([&](auto&& arg){
+                    j["transform"][i]=arg;
+                }, data.transformations()[i]);
+        }
+
+        serialize(j, data.width(), "width");
+        serialize(j, data.height(), "height");
+        serialize(j, data.config(), "config");
+    }
+
+#ifndef MSC_VER
+    extern template class xmaterialize<chart>;
+#endif
 }
 
 #endif

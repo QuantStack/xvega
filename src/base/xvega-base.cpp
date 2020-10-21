@@ -8,11 +8,5 @@
 
 namespace xv
 {
-    const nl::json& base_vegalite_json()
-    {
-        static const nl::json json_template = {
-            { "$schema", "https://vega.github.io/schema/vega-lite/v4.json" },
-        };
-        return json_template;
-    };
+    template class XVEGA_API xmaterialize<chart>;
 }

@@ -8,21 +8,38 @@
 #define XVEGA_MARK_POINT_HPP
 
 #include "../marks.hpp"
+#include "../../utils/xmaterialize.hpp"
 
 namespace xv
 {
-    struct mark_point : public mark<mark_point>
+    template <class D>
+    struct point : public mark<D>
     {
-        using base_type = mark<mark_point>;
+        using base_type = mark<D>;
 
         // Point Mark Properties
-        XPROPERTY(xtl::xoptional<std::string>, mark_point, shape);
-        XPROPERTY(xtl::xoptional<double>, mark_point, size);
+        XPROPERTY(xtl::xoptional<std::string>, D, shape);
+        XPROPERTY(xtl::xoptional<double>, D, size);
 
-        XVEGA_API mark_point();
+        inline point()
+        {
+            this->type = "point";
+        }
 
-        XVEGA_API void to_json(nl::json& j) const;
+        inline void to_json(nl::json& j) const
+        {
+            base_type::to_json(j);
+
+            serialize(j, shape(), "shape");
+            serialize(j, size(), "size");
+        }
     };
+
+    using mark_point = xmaterialize<point>;
+
+#ifndef MSC_VER
+    extern template class xmaterialize<point>;
+#endif
 }
 
 #endif

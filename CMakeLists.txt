@@ -139,12 +139,6 @@ set(XVEGA_HEADERS
     ${XVEGA_INCLUDE_DIR}/xvega/utils/xeither.hpp
     ${XVEGA_INCLUDE_DIR}/xvega/utils/serialize.hpp
     ${XVEGA_INCLUDE_DIR}/xvega/utils/random_string.hpp
-    ${XVEGA_INCLUDE_DIR}/xvega/functions/populate_data.hpp
-    ${XVEGA_INCLUDE_DIR}/xvega/functions/populate_marks.hpp
-    ${XVEGA_INCLUDE_DIR}/xvega/functions/populate_encodings.hpp
-    ${XVEGA_INCLUDE_DIR}/xvega/functions/populate_selections.hpp
-    ${XVEGA_INCLUDE_DIR}/xvega/functions/populate_transformations.hpp
-    ${XVEGA_INCLUDE_DIR}/xvega/functions/populate_config.hpp
     ${XVEGA_INCLUDE_DIR}/xvega/grammar/data/data_format.hpp
     ${XVEGA_INCLUDE_DIR}/xvega/grammar/data/data_format/json_data_format.hpp
     ${XVEGA_INCLUDE_DIR}/xvega/grammar/data/data_format/csv_data_format.hpp
@@ -205,12 +199,6 @@ set(XVEGA_HEADERS
 
 set(XVEGA_SOURCES
     ${XVEGA_SOURCE_DIR}/base/xvega-base.cpp
-    ${XVEGA_SOURCE_DIR}/functions/populate_data.cpp
-    ${XVEGA_SOURCE_DIR}/functions/populate_encodings.cpp
-    ${XVEGA_SOURCE_DIR}/functions/populate_marks.cpp
-    ${XVEGA_SOURCE_DIR}/functions/populate_selections.cpp
-    ${XVEGA_SOURCE_DIR}/functions/populate_transformations.cpp
-    ${XVEGA_SOURCE_DIR}/functions/populate_config.cpp
     ${XVEGA_SOURCE_DIR}/utils/custom_datatypes.cpp
     ${XVEGA_SOURCE_DIR}/utils/random_string.cpp
     ${XVEGA_SOURCE_DIR}/grammar/encodings.cpp
@@ -343,6 +331,10 @@ target_include_directories(xvega PUBLIC $<BUILD_INTERFACE:${XVEGA_INCLUDE_DIR}>
 target_link_libraries(xvega PUBLIC xtl)
 target_link_libraries(xvega PUBLIC xproperty)
 # target_link_libraries(xvega PUBLIC nlohmann_json)
+
+if (MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+endif (MSVC)
 
 set_target_properties(xvega PROPERTIES
 #                       LINKER_LANGUAGE CXX
