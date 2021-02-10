@@ -6,6 +6,8 @@
 
 #include "xvega/grammar/chart.hpp"
 
+#include <cstddef>
+
 #include "../utils/serialize.hpp"
 
 namespace xv
@@ -15,19 +17,14 @@ namespace xv
         j["$schema"] = "https://vega.github.io/schema/vega-lite/v4.json";
         j["data"] = data.data();
         j["mark"] = data.mark();
-        serialize(j, data.encoding(), "encoding");
+        j["encoding"] = data.encoding();
 
-        int len_selections = data.selections().size();
-        for(int i=0; i<len_selections; i++)
+        for(std::size_t i=0; i<data.selections().size(); ++i)
         {
             j["selection"][data.selections()[i].name()] = data.selections()[i];
         }
 
-        int len_transformations = data.transformations().size();
-        for(int i=0; i<len_transformations; i++)
-        {
-            j["transform"][i] = data.transformations()[i];
-        }
+        j["transform"] = data.transformations();
 
         serialize(j, data.width(), "width");
         serialize(j, data.height(), "height");

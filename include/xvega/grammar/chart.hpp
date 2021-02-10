@@ -49,7 +49,7 @@ namespace xv
     {
         XPROPERTY(data_type, Chart, data);
         XPROPERTY(marks_type, Chart, mark);
-        XPROPERTY(xtl::xoptional<Encodings>, Chart, encoding);
+        XPROPERTY(nl::json, Chart, encoding);
         XPROPERTY(std::vector<selection_type>, Chart, selections);
         XPROPERTY(std::vector<transform_type>, Chart, transformations);
         XPROPERTY(xtl::xoptional<double>, Chart, width);
